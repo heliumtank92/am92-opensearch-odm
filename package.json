@@ -27,7 +27,9 @@
   ],
   "license": "MIT",
   "exports": {
-    ".": "./src/index.mjs"
+    "./Model": "./src/Model.mjs",
+    "./Schema": "./src/Schema.mjs",
+    "./clientManager": "./src/clientManager.mjs"
   },
   "dependencies": {
     "@opensearch-project/opensearch": "^2.1.0",
