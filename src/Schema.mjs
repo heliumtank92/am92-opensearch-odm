@@ -2,6 +2,11 @@ import _ from 'lodash'
 import crypto from 'crypto'
 import moment from 'moment'
 
+import { SERVICE } from './CONFIG.mjs'
+
+import OpensearchError from './OpensearchError.mjs'
+import { INVALID_INDEX_ERROR } from './ERRORS.mjs'
+
 const DEFAULT_SETTING = {
   index: {
     number_of_shards: 3,
@@ -127,15 +132,13 @@ function _sanitizeIndex (index) {
   let sanitizedIndex = (index || '').toLowerCase()
   sanitizedIndex = sanitizedIndex.replace(INDEX_INVALID_REGEX, '')
 
-  // if (!index || !sanitizedIndex) {
-  //   const errMsg = `Cannot Create Elasticsearch Schema with index '${index || sanitizedIndex}'`
-  //   const error = errorHandler.buildResponseErrror(400, errMsg)
-  //   throw error
-  // }
+  if (!index || !sanitizedIndex) {
+    throw new OpensearchError({ index: (index || sanitizedIndex) }, INVALID_INDEX_ERROR)
+  }
 
-  // if (index !== sanitizedIndex) {
-  //   console.log(`[Warning] Sanitizing Elasticsearch Index from '${index}' to '${sanitizedIndex}'`)
-  // }
+  if (index !== sanitizedIndex) {
+    console.warn(`[${SERVICE} OpensearchOdm] Sanitizing Index from '${index}' to '${sanitizedIndex}'`)
+  }
 
   return sanitizedIndex
 }

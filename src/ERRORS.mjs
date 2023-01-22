@@ -1,3 +1,8 @@
+export const INVALID_INDEX_ERROR = {
+  message: 'Cannot Create Schema with Given Index',
+  errorCode: 'Opensearch::INVALID_INDEX'
+}
+
 export const CREATE_INDEX_ERROR = {
   errorCode: 'Opensearch::CREATE_INDEX'
 }
