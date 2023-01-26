@@ -1,6 +1,6 @@
 {
   "name": "@am92/opensearch-odm",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "OpenSearch ODM",
   "type": "module",
   "main": "src/index.mjs",
