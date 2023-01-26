@@ -27,7 +27,7 @@
   ],
   "license": "MIT",
   "exports": {
-    "./Model": "./src/Model.mjs",
+    "./Model": "./src/Model/index.mjs",
     "./Schema": "./src/Schema.mjs",
     "./clientManager": "./src/clientManager.mjs"
   },
