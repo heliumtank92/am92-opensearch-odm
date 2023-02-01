@@ -1,0 +1,47 @@
+{
+  "name": "@am92/opensearch-odm",
+  "version": "1.0.3",
+  "description": "OpenSearch ODM",
+  "type": "module",
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
+  "scripts": {
+    "test": "echo 'Error: no test specified'",
+    "preversion": "pnpm test",
+    "version": "echo 'Versioning'",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": "git@github.com:heliumtank92/am92-opensearch-odm.git",
+  "homepage": "https://github.com/heliumtank92/am92-opensearch-odm#readme",
+  "contributors": [
+    {
+      "name": "Ankit Gandhi",
+      "email": "ankitgandhi452@gmail.com",
+      "url": "https://github.com/ankitgandhi452"
+    },
+    {
+      "name": "Mehul Agarwal",
+      "email": "agarwalmehul92@gmail.com",
+      "url": "https://github.com/agarwalmehul"
+    }
+  ],
+  "license": "MIT",
+  "exports": {
+    "./Model": "./src/Model/index.mjs",
+    "./Schema": "./src/Schema.mjs",
+    "./clientManager": "./src/clientManager.mjs"
+  },
+  "dependencies": {
+    "@opensearch-project/opensearch": "^2.1.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4"
+  },
+  "keywords": [
+    "elasticsearch",
+    "opensearch",
+    "opensearch odm",
+    "opensearch wrapper",
+    "nosql",
+    "kibana"
+  ]
+}
