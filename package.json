@@ -3,13 +3,27 @@
   "version": "1.0.5",
   "description": "OpenSearch ODM",
   "type": "module",
-  "main": "src/index.mjs",
-  "module": "src/index.mjs",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.mts",
+      "import": "./src/index.mjs"
+    }
+  },
+  "types": "./types/index.d.mts",
+  "module": "./src/index.mjs",
+  "main": "./src/index.mjs",
+  "dependencies": {
+    "@opensearch-project/opensearch": "^2.2.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4"
+  },
   "scripts": {
     "test": "echo 'Error: no test specified'",
+    "generate:types": "rm -rf types && npx -p typescript tsc",
     "preversion": "pnpm test",
     "version": "echo 'Versioning'",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags && npm run publish:pkg",
+    "publish:pkg": "npm publish"
   },
   "repository": "git@github.com:heliumtank92/am92-opensearch-odm.git",
   "homepage": "https://github.com/heliumtank92/am92-opensearch-odm#readme",
@@ -26,15 +40,8 @@
     }
   ],
   "license": "MIT",
-  "exports": {
-    "./Model": "./src/Model/index.mjs",
-    "./Schema": "./src/Schema.mjs",
-    "./clientManager": "./src/clientManager.mjs"
-  },
-  "dependencies": {
-    "@opensearch-project/opensearch": "^2.2.0",
-    "lodash": "^4.17.21",
-    "moment": "^2.29.4"
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "elasticsearch",
@@ -43,5 +50,8 @@
     "opensearch wrapper",
     "nosql",
     "kibana"
-  ]
+  ],
+  "devDependencies": {
+    "@types/node": "^18.14.6"
+  }
 }
