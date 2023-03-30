@@ -36,6 +36,7 @@ export default class Model {
 
     this.list = filterModel.list.bind(this)
     this.search = filterModel.search.bind(this)
+    this.findByGeoDistance = filterModel.findByGeoDistance.bind(this)
     this.findByDateRange = filterModel.findByDateRange.bind(this)
     this.findByDate = filterModel.findByDate.bind(this)
   }
