@@ -141,7 +141,7 @@ async function findByGeoDistance (attrs = {}, projection = {}, options = {}) {
           _geo_distance: {
             [key]: value,
             order: 'asc',
-            unit: 'km',
+            unit: 'm',
             mode: 'min',
             distance_type: 'arc',
             ignore_unmapped: true
@@ -151,7 +151,13 @@ async function findByGeoDistance (attrs = {}, projection = {}, options = {}) {
     }
 
     const response = await this.search(esBody, projection, options)
-    const instances = modelHelper.extractSourceFromSearchResponse(response, 'INSTANCES')
+    const documents = modelHelper.extractSourceFromSearchResponse(response, 'DOCUMENTS')
+    const instances = documents.map(document => {
+      const { _source, sort } = document
+      const geoDistance = sort[0]
+      const instance = { ..._source, geoDistance }
+      return instance
+    })
     return instances
   } catch (error) {
     throw new OpensearchError(error, FIND_BY_GEO_DISTANCE_ERROR)
