@@ -48,6 +48,10 @@ export const LIST_ERROR = {
   errorCode: 'Opensearch::LIST'
 }
 
+export const FIND_BY_GEO_DISTANCE_ERROR = {
+  errorCode: 'Opensearch::FIND_BY_GEO_DISTANCE'
+}
+
 export const NO_TIMESTAMPS_ERROR = {
   message: 'Cannot filter by Date Range without Schema.options.timestamps',
   errorCode: 'Opensearch::NO_TIMESTAMPS'

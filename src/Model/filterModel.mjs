@@ -9,6 +9,7 @@ import {
   FIND_MANY_ERROR,
   FIND_BY_ID_ERROR,
   LIST_ERROR,
+  FIND_BY_GEO_DISTANCE_ERROR,
   NO_TIMESTAMPS_ERROR,
   INVALID_DATE_FORMAT_ERROR,
   FIND_BY_DATE_RANGE_ERROR
@@ -21,6 +22,7 @@ const filterModel = {
   findOneBy,
   findManyBy,
   list,
+  findByGeoDistance,
   search,
   findByDateRange,
   findByDate
@@ -113,6 +115,52 @@ async function list (projection = {}, options = {}) {
     return instances
   } catch (error) {
     throw new OpensearchError(error, LIST_ERROR)
+  }
+}
+
+async function findByGeoDistance (attrs = {}, projection = {}, options = {}) {
+  try {
+    const { key, value, distance, size = 10 } = attrs
+    const esBody = {
+      size,
+      query: {
+        bool: {
+          must: {
+            match_all: {}
+          },
+          filter: {
+            geo_distance: {
+              distance,
+              [key]: value
+            }
+          }
+        }
+      },
+      sort: [
+        {
+          _geo_distance: {
+            [key]: value,
+            order: 'asc',
+            unit: 'm',
+            mode: 'min',
+            distance_type: 'arc',
+            ignore_unmapped: true
+          }
+        }
+      ]
+    }
+
+    const response = await this.search(esBody, projection, options)
+    const documents = modelHelper.extractSourceFromSearchResponse(response, 'DOCUMENTS')
+    const instances = documents.map(document => {
+      const { _source, sort } = document
+      const geoDistance = sort[0]
+      const instance = { ..._source, geoDistance }
+      return instance
+    })
+    return instances
+  } catch (error) {
+    throw new OpensearchError(error, FIND_BY_GEO_DISTANCE_ERROR)
   }
 }
 

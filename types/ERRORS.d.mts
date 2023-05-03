@@ -48,39 +48,43 @@ export namespace LIST_ERROR {
     const errorCode_11: string;
     export { errorCode_11 as errorCode };
 }
+export namespace FIND_BY_GEO_DISTANCE_ERROR {
+    const errorCode_12: string;
+    export { errorCode_12 as errorCode };
+}
 export namespace NO_TIMESTAMPS_ERROR {
     const message_2: string;
     export { message_2 as message };
-    const errorCode_12: string;
-    export { errorCode_12 as errorCode };
+    const errorCode_13: string;
+    export { errorCode_13 as errorCode };
 }
 export namespace INVALID_DATE_FORMAT_ERROR {
     const message_3: string;
     export { message_3 as message };
-    const errorCode_13: string;
-    export { errorCode_13 as errorCode };
-}
-export namespace FIND_BY_DATE_RANGE_ERROR {
     const errorCode_14: string;
     export { errorCode_14 as errorCode };
 }
-export namespace UPDATE_BY_ID_ERROR {
+export namespace FIND_BY_DATE_RANGE_ERROR {
     const errorCode_15: string;
     export { errorCode_15 as errorCode };
 }
-export namespace FIND_ONE_AND_UPDATE_ERROR {
+export namespace UPDATE_BY_ID_ERROR {
     const errorCode_16: string;
     export { errorCode_16 as errorCode };
 }
-export namespace FIND_MANY_AND_UPDATE_ERROR {
+export namespace FIND_ONE_AND_UPDATE_ERROR {
     const errorCode_17: string;
     export { errorCode_17 as errorCode };
 }
-export namespace REMOVE_BY_ID_ERROR {
+export namespace FIND_MANY_AND_UPDATE_ERROR {
     const errorCode_18: string;
     export { errorCode_18 as errorCode };
 }
-export namespace REMOVE_ERROR {
+export namespace REMOVE_BY_ID_ERROR {
     const errorCode_19: string;
     export { errorCode_19 as errorCode };
+}
+export namespace REMOVE_ERROR {
+    const errorCode_20: string;
+    export { errorCode_20 as errorCode };
 }

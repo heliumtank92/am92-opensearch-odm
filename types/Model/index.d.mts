@@ -23,6 +23,7 @@ export default class Model {
     removeById: any;
     list: any;
     search: any;
+    findByGeoDistance: any;
     findByDateRange: any;
     findByDate: any;
 }
