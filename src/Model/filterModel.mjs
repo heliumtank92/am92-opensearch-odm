@@ -30,7 +30,7 @@ const filterModel = {
 
 export default filterModel
 
-async function findOne (query = {}, projection = {}, options = {}) {
+async function findOne(query = {}, projection = {}, options = {}) {
   try {
     // Build Body
     const esBody = { query }
@@ -45,28 +45,34 @@ async function findOne (query = {}, projection = {}, options = {}) {
 
     // Search and Return Return Result
     const response = await this.search(esBody, projection, searchOptions)
-    const instance = modelHelper.extractSourceFromSearchResponse(response, 'INSTANCE')
+    const instance = modelHelper.extractSourceFromSearchResponse(
+      response,
+      'INSTANCE'
+    )
     return instance
   } catch (error) {
     throw new OpensearchError(error, FIND_ONE_ERROR)
   }
 }
 
-async function findMany (query = {}, projection = {}, options = {}) {
+async function findMany(query = {}, projection = {}, options = {}) {
   try {
     // Build Body
     const esBody = { query }
 
     // Search and Return Return Result
     const response = await this.search(esBody, projection, options)
-    const instances = modelHelper.extractSourceFromSearchResponse(response, 'INSTANCES')
+    const instances = modelHelper.extractSourceFromSearchResponse(
+      response,
+      'INSTANCES'
+    )
     return instances
   } catch (error) {
     throw new OpensearchError(error, FIND_MANY_ERROR)
   }
 }
 
-async function findById (id, projection = {}, options = {}) {
+async function findById(id, projection = {}, options = {}) {
   try {
     const { Schema } = this
 
@@ -84,7 +90,9 @@ async function findById (id, projection = {}, options = {}) {
     const response = await client.get(params, clientOptions)
     const { body, statusCode } = response
 
-    if (statusCode === 404) { return null }
+    if (statusCode === 404) {
+      return null
+    }
 
     const { _source: instance } = body
     return instance
@@ -93,32 +101,35 @@ async function findById (id, projection = {}, options = {}) {
   }
 }
 
-async function findOneBy (key = '', value, projection = {}, options = {}) {
+async function findOneBy(key = '', value, projection = {}, options = {}) {
   const query = { match: { [key]: value } }
   const instance = await this.findOne(query, projection, options)
   return instance
 }
 
-async function findManyBy (key = '', value, projection = {}, options = {}) {
+async function findManyBy(key = '', value, projection = {}, options = {}) {
   const query = { match: { [key]: value } }
   const instances = await this.findMany(query, projection, options)
   return instances
 }
 
-async function list (projection = {}, options = {}) {
+async function list(projection = {}, options = {}) {
   try {
     const query = { match_all: {} }
-    const esBody = { query }
+    const esBody = { query, size: 10000 }
 
     const response = await this.search(esBody, projection, options)
-    const instances = modelHelper.extractSourceFromSearchResponse(response, 'INSTANCES')
+    const instances = modelHelper.extractSourceFromSearchResponse(
+      response,
+      'INSTANCES'
+    )
     return instances
   } catch (error) {
     throw new OpensearchError(error, LIST_ERROR)
   }
 }
 
-async function findByGeoDistance (attrs = {}, projection = {}, options = {}) {
+async function findByGeoDistance(attrs = {}, projection = {}, options = {}) {
   try {
     const { key, value, distance, size = 10 } = attrs
     const esBody = {
@@ -151,7 +162,10 @@ async function findByGeoDistance (attrs = {}, projection = {}, options = {}) {
     }
 
     const response = await this.search(esBody, projection, options)
-    const documents = modelHelper.extractSourceFromSearchResponse(response, 'DOCUMENTS')
+    const documents = modelHelper.extractSourceFromSearchResponse(
+      response,
+      'DOCUMENTS'
+    )
     const instances = documents.map(document => {
       const { _source, sort } = document
       const geoDistance = sort[0]
@@ -164,7 +178,7 @@ async function findByGeoDistance (attrs = {}, projection = {}, options = {}) {
   }
 }
 
-async function search (esBody = {}, projection = {}, options = {}) {
+async function search(esBody = {}, projection = {}, options = {}) {
   try {
     const { Schema } = this
     const { index } = Schema
@@ -192,12 +206,20 @@ async function search (esBody = {}, projection = {}, options = {}) {
   }
 }
 
-async function findByDateRange (startDate, endDate, projection = {}, options = {}) {
+async function findByDateRange(
+  startDate,
+  endDate,
+  projection = {},
+  options = {}
+) {
   const { Schema = {} } = this
   const { options: schemaOptions = {} } = Schema
 
   if (!schemaOptions.timestamp) {
-    throw new OpensearchError({ modelName: this.MODEL_NAME }, NO_TIMESTAMPS_ERROR)
+    throw new OpensearchError(
+      { modelName: this.MODEL_NAME },
+      NO_TIMESTAMPS_ERROR
+    )
   }
 
   const isValidStartDate = modelHelper.validateDate(startDate)
@@ -211,8 +233,12 @@ async function findByDateRange (startDate, endDate, projection = {}, options = {
   }
 
   try {
-    const startDateParsed = moment(startDate, 'YYYY-MM-DD').startOf('day').toISOString()
-    const endDateParsed = moment(endDate, 'YYYY-MM-DD').endOf('day').toISOString()
+    const startDateParsed = moment(startDate, 'YYYY-MM-DD')
+      .startOf('day')
+      .toISOString()
+    const endDateParsed = moment(endDate, 'YYYY-MM-DD')
+      .endOf('day')
+      .toISOString()
     const esBody = {
       query: {
         range: {
@@ -226,14 +252,17 @@ async function findByDateRange (startDate, endDate, projection = {}, options = {
     }
 
     const response = await this.search(esBody, projection, options)
-    const instances = modelHelper.extractSourceFromSearchResponse(response, 'INSTANCES')
+    const instances = modelHelper.extractSourceFromSearchResponse(
+      response,
+      'INSTANCES'
+    )
     return instances
   } catch (error) {
     throw new OpensearchError(error, FIND_BY_DATE_RANGE_ERROR)
   }
 }
 
-async function findByDate (date, projection = {}, options = {}) {
+async function findByDate(date, projection = {}, options = {}) {
   const isValidDate = modelHelper.validateDate(date)
   if (!isValidDate) {
     throw new OpensearchError({ date }, INVALID_DATE_FORMAT_ERROR)
