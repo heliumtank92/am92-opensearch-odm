@@ -14,11 +14,11 @@ const createModel = {
 
 export default createModel
 
-async function createOne (attrs = {}) {
+async function createOne(attrs = {}) {
   const { indicesExist } = await this.indicesExists()
 
   if (!indicesExist) {
-    throw new OpensearchError({ modelName: this.MODEL_NAME }, INDEX_DOES_NOT_EXIST_ERROR)
+    throw new OpensearchError(error, INDEX_DOES_NOT_EXIST_ERROR)
   }
 
   try {
@@ -39,15 +39,15 @@ async function createOne (attrs = {}) {
     await client.create(params)
     return instance
   } catch (error) {
-    throw new OpensearchError({ modelName: this.MODEL_NAME }, CREATE_ONE_ERROR)
+    throw new OpensearchError(error, CREATE_ONE_ERROR)
   }
 }
 
-async function createMany (attrs = []) {
+async function createMany(attrs = []) {
   const { indicesExist } = await this.indicesExists()
 
   if (!indicesExist) {
-    throw new OpensearchError({ modelName: this.MODEL_NAME }, INDEX_DOES_NOT_EXIST_ERROR)
+    throw new OpensearchError(error, INDEX_DOES_NOT_EXIST_ERROR)
   }
 
   try {
@@ -90,7 +90,7 @@ async function createMany (attrs = []) {
     _.each(items, (responseRecord, index) => {
       const operation = Object.keys(responseRecord)[0]
       const item = responseRecord[operation]
-      const bodyItem = reqBody[(((index + 1) * 2) - 1)]
+      const bodyItem = reqBody[(index + 1) * 2 - 1]
       if (item.status === 201) {
         responseBody.items.push({
           ...bodyItem,
@@ -107,6 +107,6 @@ async function createMany (attrs = []) {
 
     return responseBody
   } catch (error) {
-    throw new OpensearchError({ modelName: this.MODEL_NAME }, CREATE_MANY_ERROR)
+    throw new OpensearchError(error, CREATE_MANY_ERROR)
   }
 }
