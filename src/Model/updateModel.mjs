@@ -23,22 +23,45 @@ const updateModel = {
 
 export default updateModel
 
-async function updateOne (query = {}, updateObj = {}, projection = {}, options = {}) {
-  const instance = await this.findOneAndUpdate(query, updateObj, projection, options)
+async function updateOne(
+  query = {},
+  updateObj = {},
+  projection = {},
+  options = {}
+) {
+  const instance = await this.findOneAndUpdate(
+    query,
+    updateObj,
+    projection,
+    options
+  )
   return instance
 }
 
-async function updateMany (query = {}, updateObj = {}, projection = {}, options = {}) {
-  const instance = await this.findManyAndUpdate(query, updateObj, projection, options)
+async function updateMany(
+  query = {},
+  updateObj = {},
+  projection = {},
+  options = {}
+) {
+  const instance = await this.findManyAndUpdate(
+    query,
+    updateObj,
+    projection,
+    options
+  )
   return instance
 }
 
-async function updateById (id, updateObj = {}, projection = {}, options = {}) {
+async function updateById(id, updateObj = {}, projection = {}, options = {}) {
   const { Schema } = this
   const { index } = Schema
 
   if (updateObj.id && updateObj.id !== id) {
-    throw new OpensearchError({ message: '\'Id\' does not match' }, UPDATE_BY_ID_ERROR)
+    throw new OpensearchError(
+      { message: "'Id' does not match" },
+      UPDATE_BY_ID_ERROR
+    )
   }
 
   try {
@@ -50,8 +73,9 @@ async function updateById (id, updateObj = {}, projection = {}, options = {}) {
       index,
       id,
       body: {
-        doc: updateInstance,
-        detect_noop: false
+        detect_noop: false,
+        ...options,
+        doc: updateInstance
       },
       _source: true,
       ...projectionOptions
@@ -60,34 +84,51 @@ async function updateById (id, updateObj = {}, projection = {}, options = {}) {
     const client = clientManager.getPersistentClient()
     const response = await client.update(params)
     const { body } = response
-    const {
-      get: {
-        _source: document
-      } = {}
-    } = body
+    const { get: { _source: document } = {} } = body
     return document
   } catch (error) {
     throw new OpensearchError(error, UPDATE_BY_ID_ERROR)
   }
 }
 
-async function updateOneBy (key = '', value, updateObj = {}, projection = {}, options = {}) {
+async function updateOneBy(
+  key = '',
+  value,
+  updateObj = {},
+  projection = {},
+  options = {}
+) {
   const query = { match: { [key]: value } }
   const instance = await this.updateOne(query, updateObj, projection, options)
   return instance
 }
 
-async function updateManyBy (key = '', value, updateObj = {}, projection = {}, options = {}) {
+async function updateManyBy(
+  key = '',
+  value,
+  updateObj = {},
+  projection = {},
+  options = {}
+) {
   const query = { match: { [key]: value } }
   const instance = await this.updateMany(query, updateObj, projection, options)
   return instance
 }
 
-async function findOneAndUpdate (query = {}, updateObj = {}, projection = {}, options = {}) {
+async function findOneAndUpdate(
+  query = {},
+  updateObj = {},
+  projection = {},
+  options = {}
+) {
   try {
     const findProjection = { id: 1 }
 
-    const { clientOptions = {}, paramOptions = {} } = options
+    const {
+      clientOptions = {},
+      paramOptions = {},
+      updateOptions = {}
+    } = options
     const clientOpts = { ...clientOptions, ignore: undefined }
     const findOptions = { paramOptions, clientOptions: clientOpts }
 
@@ -101,14 +142,24 @@ async function findOneAndUpdate (query = {}, updateObj = {}, projection = {}, op
     }
 
     const { id } = instance
-    const updatedInstace = await this.updateById(id, updateObj, projection, options)
+    const updatedInstace = await this.updateById(
+      id,
+      updateObj,
+      projection,
+      updateOptions
+    )
     return updatedInstace
   } catch (error) {
     throw new OpensearchError(error, FIND_ONE_AND_UPDATE_ERROR)
   }
 }
 
-async function findManyAndUpdate (query = {}, updateObj = {}, projection = {}, options = {}) {
+async function findManyAndUpdate(
+  query = {},
+  updateObj = {},
+  projection = {},
+  options = {}
+) {
   try {
     const { Schema } = this
     const findProjection = _.isEmpty(projection) ? {} : { ...projection, id: 1 }
@@ -126,7 +177,9 @@ async function findManyAndUpdate (query = {}, updateObj = {}, projection = {}, o
       throw error
     }
 
-    const updateDocs = _.map(instances, instance => (utils.mergeObjs(instance, updateObj)))
+    const updateDocs = _.map(instances, instance =>
+      utils.mergeObjs(instance, updateObj)
+    )
     const response = _bulkUpdate(Schema, updateDocs)
     return response
   } catch (error) {
@@ -134,7 +187,7 @@ async function findManyAndUpdate (query = {}, updateObj = {}, projection = {}, o
   }
 }
 
-async function _bulkUpdate (Schema, attrs = []) {
+async function _bulkUpdate(Schema, attrs = []) {
   const { index } = Schema
   const reqBody = _.reduce(
     attrs,
@@ -172,7 +225,7 @@ async function _bulkUpdate (Schema, attrs = []) {
   _.each(items, (responseRecord, index) => {
     const operation = Object.keys(responseRecord)[0]
     const item = responseRecord[operation]
-    const bodyItem = reqBody[(((index + 1) * 2) - 1)]
+    const bodyItem = reqBody[(index + 1) * 2 - 1]
     if (item.status === 200) {
       responseBody.items.push({
         ...bodyItem.doc,
