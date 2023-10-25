@@ -11,7 +11,7 @@ const modelHelper = {
 
 export default modelHelper
 
-function filterBlanks (collection) {
+function filterBlanks(collection) {
   const isArray = _.isArray(collection)
   const isObject = _.isObject(collection) && !isArray
   if (isObject) {
@@ -25,7 +25,7 @@ function filterBlanks (collection) {
   }
 }
 
-function buildIndicesParams (Schema, action = '') {
+function buildIndicesParams(Schema, action = '') {
   const { index, properties, settings, aliases } = Schema
 
   switch (action) {
@@ -59,7 +59,7 @@ function buildIndicesParams (Schema, action = '') {
   }
 }
 
-function buildProjections (projection) {
+function buildProjections(projection) {
   const projectionOptions = {}
   const searchIncludes = []
   const searchExcludes = []
@@ -83,10 +83,10 @@ function buildProjections (projection) {
   return projectionOptions
 }
 
-function extractSourceFromSearchResponse (response, returnType) {
+function extractSourceFromSearchResponse(response, returnType) {
   const { body, statusCode } = response
   const { hits: summary = {} } = body
-  const { hits: documents } = summary
+  const { hits: documents = [] } = summary
   let result
 
   switch (returnType) {
@@ -101,20 +101,24 @@ function extractSourceFromSearchResponse (response, returnType) {
     }
 
     case 'INSTANCES': {
-      result = (statusCode === 404 && []) || _.map(documents, (document) => {
-        const { _source: instance } = document
-        return instance
-      })
+      result =
+        (statusCode === 404 && []) ||
+        _.map(documents, document => {
+          const { _source: instance } = document
+          return instance
+        })
       break
     }
 
     case 'INSTANCE': {
-      result = (statusCode === 404 && null) || ((documents[0] || {})._source || null)
+      result =
+        (statusCode === 404 && null) || (documents[0] || {})._source || null
       break
     }
 
     default: {
-      result = (statusCode === 404 && null) || ((documents[0] || {})._source || null)
+      result =
+        (statusCode === 404 && null) || (documents[0] || {})._source || null
       break
     }
   }
@@ -122,7 +126,7 @@ function extractSourceFromSearchResponse (response, returnType) {
   return result
 }
 
-function validateDate (date = '') {
+function validateDate(date = '') {
   const dateObject = moment(date, 'YYYY-MM-DD', true)
   return dateObject._isValid
 }
