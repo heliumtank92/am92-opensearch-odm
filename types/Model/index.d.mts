@@ -10,6 +10,7 @@ export default class Model {
     findOne: any;
     findMany: any;
     findById: any;
+    findByIds: any;
     findOneBy: any;
     findManyBy: any;
     findOneAndUpdate: any;

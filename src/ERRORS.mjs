@@ -44,6 +44,10 @@ export const FIND_BY_ID_ERROR = {
   errorCode: 'Opensearch::FIND_BY_ID'
 }
 
+export const FIND_BY_IDS_ERROR = {
+  errorCode: 'Opensearch::FIND_BY_IDS'
+}
+
 export const LIST_ERROR = {
   errorCode: 'Opensearch::LIST'
 }

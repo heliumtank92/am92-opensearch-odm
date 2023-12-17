@@ -8,6 +8,7 @@ import {
   FIND_ONE_ERROR,
   FIND_MANY_ERROR,
   FIND_BY_ID_ERROR,
+  FIND_BY_IDS_ERROR,
   LIST_ERROR,
   FIND_BY_GEO_DISTANCE_ERROR,
   NO_TIMESTAMPS_ERROR,
@@ -19,6 +20,7 @@ const filterModel = {
   findOne,
   findMany,
   findById,
+  findByIds,
   findOneBy,
   findManyBy,
   list,
@@ -98,6 +100,16 @@ async function findById(id, projection = {}, options = {}) {
     return instance
   } catch (error) {
     throw new OpensearchError(error, FIND_BY_ID_ERROR)
+  }
+}
+
+async function findByIds(ids = [], projection = {}, options = []) {
+  try {
+    const query = { ids: { values: ids } }
+    const instances = await this.findMany(query, projection, options)
+    return instances
+  } catch (error) {
+    throw new OpensearchError(error, FIND_BY_IDS_ERROR)
   }
 }
 

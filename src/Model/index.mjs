@@ -5,7 +5,7 @@ import updateModel from './updateModel.mjs'
 import removeModel from './removeModel.mjs'
 
 export default class Model {
-  constructor (MODEL_NAME, Schema) {
+  constructor(MODEL_NAME, Schema) {
     this.MODEL_NAME = MODEL_NAME
     this.Schema = Schema
 
@@ -20,6 +20,7 @@ export default class Model {
     this.findOne = filterModel.findOne.bind(this)
     this.findMany = filterModel.findMany.bind(this)
     this.findById = filterModel.findById.bind(this)
+    this.findByIds = filterModel.findByIds.bind(this)
     this.findOneBy = filterModel.findOneBy.bind(this)
     this.findManyBy = filterModel.findManyBy.bind(this)
 
