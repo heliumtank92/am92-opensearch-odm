@@ -38,11 +38,9 @@ async function findOne(query = {}, projection = {}, options = {}) {
     const esBody = { query }
 
     // Build Options
-    const { clientOptions = {}, paramOptions = {} } = options
-    const paramOpts = { ...paramOptions, size: 1 }
     const searchOptions = {
-      clientOptions,
-      paramOptions: paramOpts
+      ...options,
+      paramOptions: { ...options.paramOptions, size: 1 }
     }
 
     // Search and Return Return Result
@@ -74,7 +72,7 @@ async function findMany(query = {}, projection = {}, options = {}) {
   }
 }
 
-async function findById(id, projection = {}, options = {}) {
+async function findById(id, projection = {}) {
   try {
     const { Schema } = this
 
@@ -103,7 +101,7 @@ async function findById(id, projection = {}, options = {}) {
   }
 }
 
-async function findByIds(ids = [], projection = {}, options = []) {
+async function findByIds(ids = [], projection = {}, options = {}) {
   try {
     const query = { ids: { values: ids } }
     const instances = await this.findMany(query, projection, options)
@@ -195,7 +193,7 @@ async function search(esBody = {}, projection = {}, options = {}) {
     const { Schema } = this
     const { index } = Schema
 
-    const { clientOptions = {}, paramOptions = {} } = options
+    const { clientOptions = {}, paramOptions = {}, bodyOptions = {} } = options
     const clientOpts = {
       ignore: [404],
       ...clientOptions
@@ -206,7 +204,7 @@ async function search(esBody = {}, projection = {}, options = {}) {
       ...paramOptions,
       index,
       ...projectionOptions,
-      body: esBody
+      body: { ...esBody, ...bodyOptions }
     }
 
     const client = clientManager.getPersistentClient()
