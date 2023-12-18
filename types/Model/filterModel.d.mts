@@ -14,8 +14,8 @@ declare namespace filterModel {
 }
 declare function findOne(query?: {}, projection?: {}, options?: {}): Promise<any>;
 declare function findMany(query?: {}, projection?: {}, options?: {}): Promise<any>;
-declare function findById(id: any, projection?: {}, options?: {}): Promise<any>;
-declare function findByIds(ids?: any[], projection?: {}, options?: any[]): Promise<any>;
+declare function findById(id: any, projection?: {}): Promise<any>;
+declare function findByIds(ids?: any[], projection?: {}, options?: {}): Promise<any>;
 declare function findOneBy(key: string, value: any, projection?: {}, options?: {}): Promise<any>;
 declare function findManyBy(key: string, value: any, projection?: {}, options?: {}): Promise<any>;
 declare function list(projection?: {}, options?: {}): Promise<any>;
