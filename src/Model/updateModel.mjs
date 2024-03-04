@@ -57,7 +57,7 @@ async function updateById(id, updateObj = {}, projection = {}, options = {}) {
   const { Schema } = this
   const { index } = Schema
 
-  if (updateObj.id && updateObj.id !== id) {
+  if (updateObj?.id && updateObj.id !== id) {
     throw new OpensearchError(
       { message: "'Id' does not match" },
       UPDATE_BY_ID_ERROR
@@ -75,7 +75,7 @@ async function updateById(id, updateObj = {}, projection = {}, options = {}) {
       body: {
         detect_noop: false,
         ...options,
-        doc: updateInstance
+        doc: updateObj ? updateInstance : undefined
       },
       _source: true,
       ...projectionOptions
