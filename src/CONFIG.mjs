@@ -9,7 +9,10 @@ const {
   // User Auth Details
   OPENSEARCH_AUTH_ENABLED = 'false',
   OPENSEARCH_USERNAME = '',
-  OPENSEARCH_PASSWORD = ''
+  OPENSEARCH_PASSWORD = '',
+
+  // Index Details
+  OPENSEARCH_INDEX_PREFIX = ''
 } = process.env
 
 const SERVICE = `${pkgName}@${pkgVersion}`
@@ -18,10 +21,7 @@ const fatalLogFunc = console.fatal || console.error
 const AUTH_ENABLED = OPENSEARCH_AUTH_ENABLED === 'true'
 
 const MISSING_CONFIG = []
-const REQUIRED_CONFIG = [
-  'OPENSEARCH_PROTOCOL',
-  'OPENSEARCH_DOMAIN'
-]
+const REQUIRED_CONFIG = ['OPENSEARCH_PROTOCOL', 'OPENSEARCH_DOMAIN']
 
 if (AUTH_ENABLED) {
   REQUIRED_CONFIG.push('OPENSEARCH_USERNAME')
@@ -35,7 +35,11 @@ REQUIRED_CONFIG.forEach(key => {
 })
 
 if (MISSING_CONFIG.length) {
-  fatalLogFunc(`[${SERVICE} OpensearchOdm] OpensearchOdm Config Missing: ${MISSING_CONFIG.join(', ')}`)
+  fatalLogFunc(
+    `[${SERVICE} OpensearchOdm] OpensearchOdm Config Missing: ${MISSING_CONFIG.join(
+      ', '
+    )}`
+  )
   process.exit(1)
 }
 
@@ -53,7 +57,8 @@ const CONNECTION_CONFIG = {
 }
 
 const CONFIG = {
-  CONNECTION_CONFIG
+  CONNECTION_CONFIG,
+  INDEX_PREFIX: OPENSEARCH_INDEX_PREFIX
 }
 
 export default CONFIG
