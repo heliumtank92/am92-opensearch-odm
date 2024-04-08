@@ -104,6 +104,8 @@ async function findById(id, projection = {}) {
 async function findByIds(ids = [], projection = {}, options = {}) {
   try {
     const query = { ids: { values: ids } }
+    options.bodyOptions = { ...options.bodyOptions, size: ids.length }
+
     const instances = await this.findMany(query, projection, options)
     return instances
   } catch (error) {
