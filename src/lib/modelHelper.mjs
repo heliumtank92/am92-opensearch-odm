@@ -53,6 +53,14 @@ function buildIndicesParams(Schema, action = '') {
       return params
     }
 
+    case 'updateSchema': {
+      const { index, properties } = Schema
+      const body = { properties }
+      const filteredBody = filterBlanks(body)
+      const params = { index, body: filteredBody }
+      return params
+    }
+
     default: {
       return {}
     }

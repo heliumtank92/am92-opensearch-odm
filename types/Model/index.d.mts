@@ -5,6 +5,7 @@ export default class Model {
     createIndices: any;
     removeIndices: any;
     indicesExists: any;
+    updateSchema: any;
     createOne: any;
     createMany: any;
     findOne: any;

@@ -13,6 +13,7 @@ export default class Model {
     this.createIndices = indicesModel.createIndices.bind(this)
     this.removeIndices = indicesModel.removeIndices.bind(this)
     this.indicesExists = indicesModel.indicesExists.bind(this)
+    this.updateSchema = indicesModel.updateSchema.bind(this)
 
     this.createOne = createModel.createOne.bind(this)
     this.createMany = createModel.createMany.bind(this)

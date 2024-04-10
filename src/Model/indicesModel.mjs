@@ -10,12 +10,13 @@ import {
 const indicesModel = {
   createIndices,
   removeIndices,
-  indicesExists
+  indicesExists,
+  updateSchema
 }
 
 export default indicesModel
 
-async function createIndices () {
+async function createIndices() {
   try {
     const { Schema } = this
     const params = modelHelper.buildIndicesParams(Schema, 'create')
@@ -26,7 +27,7 @@ async function createIndices () {
   }
 }
 
-async function removeIndices () {
+async function removeIndices() {
   try {
     const { Schema } = this
     const params = modelHelper.buildIndicesParams(Schema, 'delete')
@@ -37,7 +38,7 @@ async function removeIndices () {
   }
 }
 
-async function indicesExists () {
+async function indicesExists() {
   try {
     const { Schema } = this
 
@@ -49,10 +50,23 @@ async function indicesExists () {
     const response = await client.indices.exists(params, clientOptions)
     const { statusCode } = response
 
-    if (statusCode === 404) { return { indicesExist: false } }
+    if (statusCode === 404) {
+      return { indicesExist: false }
+    }
 
     return { indicesExist: true }
   } catch (error) {
     throw new OpensearchError(error, INDEX_EXISTS_ERROR)
+  }
+}
+
+async function updateSchema() {
+  try {
+    const { Schema } = this
+    const params = modelHelper.buildIndicesParams(Schema, 'updateSchema')
+    const client = clientManager.getPersistentClient()
+    await client.indices.putMapping(params)
+  } catch (error) {
+    throw new OpensearchError(error, CREATE_INDEX_ERROR)
   }
 }
