@@ -82,6 +82,10 @@ export const FIND_MANY_AND_UPDATE_ERROR = {
   errorCode: 'Opensearch::FIND_MANY_AND_UPDATE'
 }
 
+export const UPDATE_BY_QUERY_ERROR = {
+  errorCode: 'Opensearch::UPDATE_BY_QUERY'
+}
+
 export const REMOVE_BY_ID_ERROR = {
   errorCode: 'Opensearch::REMOVE_BY_ID'
 }

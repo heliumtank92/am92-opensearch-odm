@@ -32,6 +32,7 @@ export default class Model {
     this.updateById = updateModel.updateById.bind(this)
     this.updateOneBy = updateModel.updateOneBy.bind(this)
     this.updateManyBy = updateModel.updateManyBy.bind(this)
+    this.updateByQuery = updateModel.updateByQuery.bind(this)
 
     this.remove = removeModel.remove.bind(this)
     this.removeById = removeModel.removeById.bind(this)

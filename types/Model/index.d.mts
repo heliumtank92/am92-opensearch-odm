@@ -21,6 +21,7 @@ export default class Model {
     updateById: any;
     updateOneBy: any;
     updateManyBy: any;
+    updateByQuery: any;
     remove: any;
     removeById: any;
     list: any;

@@ -84,11 +84,15 @@ export namespace FIND_MANY_AND_UPDATE_ERROR {
     const errorCode_19: string;
     export { errorCode_19 as errorCode };
 }
-export namespace REMOVE_BY_ID_ERROR {
+export namespace UPDATE_BY_QUERY_ERROR {
     const errorCode_20: string;
     export { errorCode_20 as errorCode };
 }
-export namespace REMOVE_ERROR {
+export namespace REMOVE_BY_ID_ERROR {
     const errorCode_21: string;
     export { errorCode_21 as errorCode };
+}
+export namespace REMOVE_ERROR {
+    const errorCode_22: string;
+    export { errorCode_22 as errorCode };
 }
