@@ -70,6 +70,10 @@ export const FIND_BY_DATE_RANGE_ERROR = {
   errorCode: 'Opensearch::FIND_BY_DATE_RANGE'
 }
 
+export const COUNT_ERROR = {
+  errorCode: 'Opensearch::COUNT'
+}
+
 export const UPDATE_BY_ID_ERROR = {
   errorCode: 'Opensearch::UPDATE_BY_ID'
 }

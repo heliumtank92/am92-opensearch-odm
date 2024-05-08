@@ -13,7 +13,8 @@ import {
   FIND_BY_GEO_DISTANCE_ERROR,
   NO_TIMESTAMPS_ERROR,
   INVALID_DATE_FORMAT_ERROR,
-  FIND_BY_DATE_RANGE_ERROR
+  FIND_BY_DATE_RANGE_ERROR,
+  COUNT_ERROR
 } from '../ERRORS.mjs'
 
 const filterModel = {
@@ -27,7 +28,8 @@ const filterModel = {
   findByGeoDistance,
   search,
   findByDateRange,
-  findByDate
+  findByDate,
+  count
 }
 
 export default filterModel
@@ -282,4 +284,30 @@ async function findByDate(date, projection = {}, options = {}) {
 
   const instances = await this.findByDateRange(date, date, projection, options)
   return instances
+}
+
+async function count(esBody = {}, options = {}) {
+  try {
+    const { Schema } = this
+    const { index } = Schema
+
+    const { clientOptions = {}, paramOptions = {}, bodyOptions = {} } = options
+    const clientOpts = {
+      ignore: [404],
+      ...clientOptions
+    }
+
+    const params = {
+      ...paramOptions,
+      index,
+      body: { ...esBody, ...bodyOptions }
+    }
+
+    const client = clientManager.getPersistentClient()
+
+    const response = await client.count(params, clientOpts)
+    return response
+  } catch (error) {
+    throw new OpensearchError(error, COUNT_ERROR)
+  }
 }

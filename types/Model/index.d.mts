@@ -29,4 +29,5 @@ export default class Model {
     findByGeoDistance: any;
     findByDateRange: any;
     findByDate: any;
+    count: any;
 }

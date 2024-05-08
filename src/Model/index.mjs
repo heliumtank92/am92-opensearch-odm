@@ -42,5 +42,6 @@ export default class Model {
     this.findByGeoDistance = filterModel.findByGeoDistance.bind(this)
     this.findByDateRange = filterModel.findByDateRange.bind(this)
     this.findByDate = filterModel.findByDate.bind(this)
+    this.count = filterModel.count.bind(this)
   }
 }
