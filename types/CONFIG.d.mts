@@ -7,7 +7,7 @@ export const SERVICE: string;
 declare namespace CONNECTION_CONFIG {
     export { node };
     export namespace ssl {
-        let rejectUnauthorized: boolean;
+        const rejectUnauthorized: boolean;
     }
 }
 declare const OPENSEARCH_INDEX_PREFIX: string;

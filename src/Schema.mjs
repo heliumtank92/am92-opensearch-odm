@@ -67,21 +67,29 @@ function _buildProps(propsArray, properties, attrs) {
 
     const config = properties[prop]
     const { type } = config
-    let value = attrs[prop] || ''
+    let value = attrs[prop]
 
-    if (type === 'integer' || type === 'long') {
-      value = _.isArray(value) ? value : Number(value)
-      value = (isNaN(value) && 0) || value
+    if (type === 'integer' || type === 'long' || type === 'double') {
+      value = _.isArray(value)
+        ? _.map(value, _sanitizeValueNumber)
+        : _sanitizeValueNumber(value)
     }
 
     if (type === 'boolean') {
-      value =
-        value === true ||
-        _.chain(value).toString().lowerCase().trim().value() === 'true'
+      value = _.isArray(value)
+        ? _.map(value, _sanitizeValueBoolean)
+        : _sanitizeValueBoolean(value)
     }
 
-    if (type === 'text' || type === 'keyword') {
-      value = _.isArray(value) ? value : _.chain(value).toString().value()
+    if (
+      type === 'text' ||
+      type === 'keyword' ||
+      type === 'constant_keyword' ||
+      type === 'wildcard'
+    ) {
+      value = _.isArray(value)
+        ? _.map(value, _sanitizeValueString)
+        : _sanitizeValueString(value)
     }
 
     if (type === 'object') {
@@ -161,4 +169,20 @@ function _sanitizeIndex(index) {
   }
 
   return sanitizedIndex
+}
+
+function _sanitizeValueNumber(value) {
+  let numVal = Number(value)
+  return (isNaN(numVal) && 0) || numVal
+}
+
+function _sanitizeValueBoolean(value) {
+  return (
+    value === true ||
+    _.chain(value).toString().lowerCase().trim().value() === 'true'
+  )
+}
+
+function _sanitizeValueString(value) {
+  return _.isString(value) ? value : value.toString()
 }
