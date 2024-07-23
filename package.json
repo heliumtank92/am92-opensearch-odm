@@ -1,6 +1,6 @@
 {
   "name": "@am92/opensearch-odm",
-  "version": "1.1.20",
+  "version": "1.1.21",
   "description": "OpenSearch ODM",
   "type": "module",
   "exports": {
