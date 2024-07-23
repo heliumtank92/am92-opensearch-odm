@@ -7,7 +7,8 @@ import OpensearchError from '../OpensearchError.mjs'
 import {
   UPDATE_BY_ID_ERROR,
   FIND_ONE_AND_UPDATE_ERROR,
-  FIND_MANY_AND_UPDATE_ERROR
+  FIND_MANY_AND_UPDATE_ERROR,
+  UPDATE_BY_QUERY_ERROR
 } from '../ERRORS.mjs'
 
 const updateModel = {
@@ -16,6 +17,7 @@ const updateModel = {
   updateById,
   updateOneBy,
   updateManyBy,
+  updateByQuery,
 
   findOneAndUpdate,
   findManyAndUpdate
@@ -57,7 +59,7 @@ async function updateById(id, updateObj = {}, projection = {}, options = {}) {
   const { Schema } = this
   const { index } = Schema
 
-  if (updateObj.id && updateObj.id !== id) {
+  if (updateObj?.id && updateObj.id !== id) {
     throw new OpensearchError(
       { message: "'Id' does not match" },
       UPDATE_BY_ID_ERROR
@@ -75,7 +77,7 @@ async function updateById(id, updateObj = {}, projection = {}, options = {}) {
       body: {
         detect_noop: false,
         ...options,
-        doc: updateInstance
+        doc: updateObj ? updateInstance : undefined
       },
       _source: true,
       ...projectionOptions
@@ -113,6 +115,33 @@ async function updateManyBy(
   const query = { match: { [key]: value } }
   const instance = await this.updateMany(query, updateObj, projection, options)
   return instance
+}
+
+async function updateByQuery(esBody = {}, options = {}) {
+  try {
+    const { Schema } = this
+    const { index } = Schema
+
+    const { clientOptions = {}, paramOptions = {}, bodyOptions = {} } = options
+
+    const clientOpts = {
+      ignore: [404],
+      ...clientOptions
+    }
+
+    const params = {
+      ...paramOptions,
+      index,
+      body: { ...esBody, ...bodyOptions }
+    }
+
+    const client = clientManager.getPersistentClient()
+
+    const response = await client.updateByQuery(params, clientOpts)
+    return response
+  } catch (error) {
+    throw new OpensearchError(error, FIND_MANY_AND_UPDATE_ERROR)
+  }
 }
 
 async function findOneAndUpdate(

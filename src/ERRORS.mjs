@@ -44,6 +44,10 @@ export const FIND_BY_ID_ERROR = {
   errorCode: 'Opensearch::FIND_BY_ID'
 }
 
+export const FIND_BY_IDS_ERROR = {
+  errorCode: 'Opensearch::FIND_BY_IDS'
+}
+
 export const LIST_ERROR = {
   errorCode: 'Opensearch::LIST'
 }
@@ -66,6 +70,10 @@ export const FIND_BY_DATE_RANGE_ERROR = {
   errorCode: 'Opensearch::FIND_BY_DATE_RANGE'
 }
 
+export const COUNT_ERROR = {
+  errorCode: 'Opensearch::COUNT'
+}
+
 export const UPDATE_BY_ID_ERROR = {
   errorCode: 'Opensearch::UPDATE_BY_ID'
 }
@@ -76,6 +84,10 @@ export const FIND_ONE_AND_UPDATE_ERROR = {
 
 export const FIND_MANY_AND_UPDATE_ERROR = {
   errorCode: 'Opensearch::FIND_MANY_AND_UPDATE'
+}
+
+export const UPDATE_BY_QUERY_ERROR = {
+  errorCode: 'Opensearch::UPDATE_BY_QUERY'
 }
 
 export const REMOVE_BY_ID_ERROR = {

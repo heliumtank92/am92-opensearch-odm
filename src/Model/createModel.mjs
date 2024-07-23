@@ -18,7 +18,7 @@ async function createOne(attrs = {}) {
   const { indicesExist } = await this.indicesExists()
 
   if (!indicesExist) {
-    throw new OpensearchError(error, INDEX_DOES_NOT_EXIST_ERROR)
+    throw new OpensearchError({}, INDEX_DOES_NOT_EXIST_ERROR)
   }
 
   try {
@@ -47,7 +47,7 @@ async function createMany(attrs = []) {
   const { indicesExist } = await this.indicesExists()
 
   if (!indicesExist) {
-    throw new OpensearchError(error, INDEX_DOES_NOT_EXIST_ERROR)
+    throw new OpensearchError({}, INDEX_DOES_NOT_EXIST_ERROR)
   }
 
   try {

@@ -5,11 +5,13 @@ export default class Model {
     createIndices: any;
     removeIndices: any;
     indicesExists: any;
+    updateSchema: any;
     createOne: any;
     createMany: any;
     findOne: any;
     findMany: any;
     findById: any;
+    findByIds: any;
     findOneBy: any;
     findManyBy: any;
     findOneAndUpdate: any;
@@ -19,6 +21,7 @@ export default class Model {
     updateById: any;
     updateOneBy: any;
     updateManyBy: any;
+    updateByQuery: any;
     remove: any;
     removeById: any;
     list: any;
@@ -26,4 +29,5 @@ export default class Model {
     findByGeoDistance: any;
     findByDateRange: any;
     findByDate: any;
+    count: any;
 }

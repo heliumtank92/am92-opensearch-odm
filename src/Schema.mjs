@@ -2,7 +2,7 @@ import _ from 'lodash'
 import crypto from 'crypto'
 import moment from 'moment'
 
-import { SERVICE } from './CONFIG.mjs'
+import CONFIG, { SERVICE } from './CONFIG.mjs'
 
 import OpensearchError from './OpensearchError.mjs'
 import { INVALID_INDEX_ERROR } from './ERRORS.mjs'
@@ -21,7 +21,13 @@ const DEFAULT_OPTIONS = {
 const INDEX_INVALID_REGEX = /^[\\^\\+_-]|[\\/*?"<>|`` ,#:.]/g
 
 export default class Schema {
-  constructor (index = '', properties = {}, settings = {}, aliases = [], options = {}) {
+  constructor(
+    index = '',
+    properties = {},
+    settings = {},
+    aliases = [],
+    options = {}
+  ) {
     const optionsProperties = _buildOptionsProperties(options)
 
     this.index = _sanitizeIndex(index)
@@ -36,7 +42,7 @@ export default class Schema {
     this.instantiate = this.instantiate.bind(this)
   }
 
-  instantiate (attrs = {}, type = 'create') {
+  instantiate(attrs = {}, type = 'create') {
     const { properties, propsArray, options } = this
 
     const props = _buildProps(propsArray, properties, attrs)
@@ -50,28 +56,40 @@ export default class Schema {
   }
 }
 
-function _buildProps (propsArray, properties, attrs) {
+function _buildProps(propsArray, properties, attrs) {
   const props = {}
 
   _.forEach(propsArray, prop => {
     const propExists = attrs[prop] !== undefined
-    if (!propExists) { return }
+    if (!propExists) {
+      return
+    }
 
     const config = properties[prop]
     const { type } = config
-    let value = attrs[prop] || ''
+    let value = attrs[prop]
 
-    if (type === 'integer' || type === 'long') {
-      value = _.isArray(value) ? value : Number(value)
-      value = (isNaN(value) && 0) || value
+    if (type === 'integer' || type === 'long' || type === 'double') {
+      value = _.isArray(value)
+        ? _.map(value, _sanitizeValueNumber)
+        : _sanitizeValueNumber(value)
     }
 
     if (type === 'boolean') {
-      value = value === true || _.chain(value).toString().lowerCase().trim().value() === 'true'
+      value = _.isArray(value)
+        ? _.map(value, _sanitizeValueBoolean)
+        : _sanitizeValueBoolean(value)
     }
 
-    if (type === 'text' || type === 'keyword') {
-      value = _.isArray(value) ? value : _.chain(value).toString().value()
+    if (
+      type === 'text' ||
+      type === 'keyword' ||
+      type === 'constant_keyword' ||
+      type === 'wildcard'
+    ) {
+      value = _.isArray(value)
+        ? _.map(value, _sanitizeValueString)
+        : _sanitizeValueString(value)
     }
 
     if (type === 'object') {
@@ -84,7 +102,7 @@ function _buildProps (propsArray, properties, attrs) {
   return props
 }
 
-function _buildTypeProps (options, attrs, type) {
+function _buildTypeProps(options, attrs, type) {
   const typeProps = {}
 
   switch (type) {
@@ -111,7 +129,7 @@ function _buildTypeProps (options, attrs, type) {
   return typeProps
 }
 
-function _buildOptionsProperties (options) {
+function _buildOptionsProperties(options) {
   const optionsProperties = {}
 
   if (options.timestamp === true) {
@@ -128,17 +146,43 @@ function _buildOptionsProperties (options) {
   return optionsProperties
 }
 
-function _sanitizeIndex (index) {
+function _sanitizeIndex(index) {
   let sanitizedIndex = (index || '').toLowerCase()
-  sanitizedIndex = sanitizedIndex.replace(INDEX_INVALID_REGEX, '')
+  sanitizedIndex = CONFIG.INDEX_PREFIX
+    ? `${CONFIG.INDEX_PREFIX}-${sanitizedIndex.replace(
+        INDEX_INVALID_REGEX,
+        ''
+      )}`
+    : sanitizedIndex.replace(INDEX_INVALID_REGEX, '')
 
   if (!index || !sanitizedIndex) {
-    throw new OpensearchError({ index: (index || sanitizedIndex) }, INVALID_INDEX_ERROR)
+    throw new OpensearchError(
+      { index: index || sanitizedIndex },
+      INVALID_INDEX_ERROR
+    )
   }
 
   if (index !== sanitizedIndex) {
-    console.warn(`[${SERVICE} OpensearchOdm] Sanitizing Index from '${index}' to '${sanitizedIndex}'`)
+    console.warn(
+      `[${SERVICE} OpensearchOdm] Sanitizing Index from '${index}' to '${sanitizedIndex}'`
+    )
   }
 
   return sanitizedIndex
+}
+
+function _sanitizeValueNumber(value) {
+  let numVal = Number(value)
+  return (isNaN(numVal) && 0) || numVal
+}
+
+function _sanitizeValueBoolean(value) {
+  return (
+    value === true ||
+    _.chain(value).toString().lowerCase().trim().value() === 'true'
+  )
+}
+
+function _sanitizeValueString(value) {
+  return _.isString(value) ? value : value.toString()
 }

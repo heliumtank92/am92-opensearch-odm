@@ -8,24 +8,28 @@ import {
   FIND_ONE_ERROR,
   FIND_MANY_ERROR,
   FIND_BY_ID_ERROR,
+  FIND_BY_IDS_ERROR,
   LIST_ERROR,
   FIND_BY_GEO_DISTANCE_ERROR,
   NO_TIMESTAMPS_ERROR,
   INVALID_DATE_FORMAT_ERROR,
-  FIND_BY_DATE_RANGE_ERROR
+  FIND_BY_DATE_RANGE_ERROR,
+  COUNT_ERROR
 } from '../ERRORS.mjs'
 
 const filterModel = {
   findOne,
   findMany,
   findById,
+  findByIds,
   findOneBy,
   findManyBy,
   list,
   findByGeoDistance,
   search,
   findByDateRange,
-  findByDate
+  findByDate,
+  count
 }
 
 export default filterModel
@@ -36,11 +40,9 @@ async function findOne(query = {}, projection = {}, options = {}) {
     const esBody = { query }
 
     // Build Options
-    const { clientOptions = {}, paramOptions = {} } = options
-    const paramOpts = { ...paramOptions, size: 1 }
     const searchOptions = {
-      clientOptions,
-      paramOptions: paramOpts
+      ...options,
+      paramOptions: { ...options.paramOptions, size: 1 }
     }
 
     // Search and Return Return Result
@@ -72,7 +74,7 @@ async function findMany(query = {}, projection = {}, options = {}) {
   }
 }
 
-async function findById(id, projection = {}, options = {}) {
+async function findById(id, projection = {}) {
   try {
     const { Schema } = this
 
@@ -98,6 +100,18 @@ async function findById(id, projection = {}, options = {}) {
     return instance
   } catch (error) {
     throw new OpensearchError(error, FIND_BY_ID_ERROR)
+  }
+}
+
+async function findByIds(ids = [], projection = {}, options = {}) {
+  try {
+    const query = { ids: { values: ids } }
+    options.bodyOptions = { ...options.bodyOptions, size: ids.length }
+
+    const instances = await this.findMany(query, projection, options)
+    return instances
+  } catch (error) {
+    throw new OpensearchError(error, FIND_BY_IDS_ERROR)
   }
 }
 
@@ -183,7 +197,7 @@ async function search(esBody = {}, projection = {}, options = {}) {
     const { Schema } = this
     const { index } = Schema
 
-    const { clientOptions = {}, paramOptions = {} } = options
+    const { clientOptions = {}, paramOptions = {}, bodyOptions = {} } = options
     const clientOpts = {
       ignore: [404],
       ...clientOptions
@@ -194,7 +208,7 @@ async function search(esBody = {}, projection = {}, options = {}) {
       ...paramOptions,
       index,
       ...projectionOptions,
-      body: esBody
+      body: { ...esBody, ...bodyOptions }
     }
 
     const client = clientManager.getPersistentClient()
@@ -270,4 +284,30 @@ async function findByDate(date, projection = {}, options = {}) {
 
   const instances = await this.findByDateRange(date, date, projection, options)
   return instances
+}
+
+async function count(esBody = {}, options = {}) {
+  try {
+    const { Schema } = this
+    const { index } = Schema
+
+    const { clientOptions = {}, paramOptions = {}, bodyOptions = {} } = options
+    const clientOpts = {
+      ignore: [404],
+      ...clientOptions
+    }
+
+    const params = {
+      ...paramOptions,
+      index,
+      body: { ...esBody, ...bodyOptions }
+    }
+
+    const client = clientManager.getPersistentClient()
+
+    const response = await client.count(params, clientOpts)
+    return response
+  } catch (error) {
+    throw new OpensearchError(error, COUNT_ERROR)
+  }
 }
