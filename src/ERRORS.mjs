@@ -23,6 +23,14 @@ export const UPDATE_SETTINGS_ERROR = {
   errorCode: 'Opensearch::UPDATE_SETTINGS'
 }
 
+export const CLOSE_INDEX_ERROR = {
+  errorCode: 'Opensearch::CLOSE_INDEX'
+}
+
+export const OPEN_INDEX_ERROR = {
+  errorCode: 'Opensearch::OPEN_INDEX'
+}
+
 export const INDEX_DOES_NOT_EXIST_ERROR = {
   message: 'Index does not exist',
   errorCode: 'Opensearch::INDEX_DOES_NOT_EXIST'

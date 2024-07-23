@@ -48,6 +48,8 @@ function buildIndicesParams(Schema, action = '') {
       return params
     }
 
+    case 'open':
+    case 'close':
     case 'delete': {
       const params = { index }
       return params

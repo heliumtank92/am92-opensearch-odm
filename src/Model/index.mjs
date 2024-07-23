@@ -15,6 +15,8 @@ export default class Model {
     this.indicesExists = indicesModel.indicesExists.bind(this)
     this.updateSchema = indicesModel.updateSchema.bind(this)
     this.updateSettings = indicesModel.updateSettings.bind(this)
+    this.closeIndices = indicesModel.closeIndices.bind(this)
+    this.openIndices = indicesModel.openIndices.bind(this)
 
     this.createOne = createModel.createOne.bind(this)
     this.createMany = createModel.createMany.bind(this)

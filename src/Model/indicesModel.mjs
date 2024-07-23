@@ -6,7 +6,9 @@ import {
   REMOVE_INDEX_ERROR,
   INDEX_EXISTS_ERROR,
   UPDATE_SCHEMA_ERROR,
-  UPDATE_SETTINGS_ERROR
+  UPDATE_SETTINGS_ERROR,
+  CLOSE_INDEX_ERROR,
+  OPEN_INDEX_ERROR
 } from '../ERRORS.mjs'
 
 const indicesModel = {
@@ -14,7 +16,9 @@ const indicesModel = {
   removeIndices,
   indicesExists,
   updateSchema,
-  updateSettings
+  updateSettings,
+  closeIndices,
+  openIndices
 }
 
 export default indicesModel
@@ -82,5 +86,27 @@ async function updateSettings() {
     await client.indices.putSettings(params)
   } catch (error) {
     throw new OpensearchError(error, UPDATE_SETTINGS_ERROR)
+  }
+}
+
+async function closeIndices() {
+  try {
+    const { Schema } = this
+    const params = modelHelper.buildIndicesParams(Schema, 'close')
+    const client = clientManager.getPersistentClient()
+    await client.indices.close(params)
+  } catch (error) {
+    throw new OpensearchError(error, CLOSE_INDEX_ERROR)
+  }
+}
+
+async function openIndices() {
+  try {
+    const { Schema } = this
+    const params = modelHelper.buildIndicesParams(Schema, 'open')
+    const client = clientManager.getPersistentClient()
+    await client.indices.open(params)
+  } catch (error) {
+    throw new OpensearchError(error, OPEN_INDEX_ERROR)
   }
 }
