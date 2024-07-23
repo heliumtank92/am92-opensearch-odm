@@ -4,14 +4,17 @@ import OpensearchError from '../OpensearchError.mjs'
 import {
   CREATE_INDEX_ERROR,
   REMOVE_INDEX_ERROR,
-  INDEX_EXISTS_ERROR
+  INDEX_EXISTS_ERROR,
+  UPDATE_SCHEMA_ERROR,
+  UPDATE_SETTINGS_ERROR
 } from '../ERRORS.mjs'
 
 const indicesModel = {
   createIndices,
   removeIndices,
   indicesExists,
-  updateSchema
+  updateSchema,
+  updateSettings
 }
 
 export default indicesModel
@@ -67,6 +70,17 @@ async function updateSchema() {
     const client = clientManager.getPersistentClient()
     await client.indices.putMapping(params)
   } catch (error) {
-    throw new OpensearchError(error, CREATE_INDEX_ERROR)
+    throw new OpensearchError(error, UPDATE_SCHEMA_ERROR)
+  }
+}
+
+async function updateSettings() {
+  try {
+    const { Schema } = this
+    const params = modelHelper.buildIndicesParams(Schema, 'updateSettings')
+    const client = clientManager.getPersistentClient()
+    await client.indices.putSettings(params)
+  } catch (error) {
+    throw new OpensearchError(error, UPDATE_SETTINGS_ERROR)
   }
 }

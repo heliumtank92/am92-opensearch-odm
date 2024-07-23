@@ -6,6 +6,7 @@ export default class Model {
     removeIndices: any;
     indicesExists: any;
     updateSchema: any;
+    updateSettings: any;
     createOne: any;
     createMany: any;
     findOne: any;

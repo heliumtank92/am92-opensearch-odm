@@ -14,6 +14,7 @@ export default class Model {
     this.removeIndices = indicesModel.removeIndices.bind(this)
     this.indicesExists = indicesModel.indicesExists.bind(this)
     this.updateSchema = indicesModel.updateSchema.bind(this)
+    this.updateSettings = indicesModel.updateSettings.bind(this)
 
     this.createOne = createModel.createOne.bind(this)
     this.createMany = createModel.createMany.bind(this)

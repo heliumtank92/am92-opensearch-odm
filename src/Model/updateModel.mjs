@@ -264,7 +264,7 @@ async function _bulkUpdate(Schema, attrs = []) {
       responseBody.hasError = true
       responseBody.errors.push({
         item: bodyItem,
-        message: item.error.reason
+        error: item.error || item
       })
     }
   })

@@ -11,7 +11,7 @@ const removeModel = {
 
 export default removeModel
 
-async function remove (query = {}, options = {}) {
+async function remove(query = {}, options = {}) {
   try {
     const { Schema } = this
     const findProjection = { id: 1 }
@@ -36,7 +36,7 @@ async function remove (query = {}, options = {}) {
   }
 }
 
-async function removeById (id, options = {}) {
+async function removeById(id, options = {}) {
   try {
     const { Schema } = this
 
@@ -55,7 +55,7 @@ async function removeById (id, options = {}) {
   }
 }
 
-async function _bulkRemove (Schema, attrs = []) {
+async function _bulkRemove(Schema, attrs = []) {
   const { index } = Schema
   const reqBody = _.reduce(
     attrs,
@@ -99,7 +99,7 @@ async function _bulkRemove (Schema, attrs = []) {
       responseBody.hasError = true
       responseBody.errors.push({
         item: bodyItem,
-        message: item.error.reason
+        error: item.error || item
       })
     }
   })

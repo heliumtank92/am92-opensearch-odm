@@ -14,4 +14,4 @@ declare function createClient(connectionConfig?: {
 }): Promise<Client>;
 declare function releaseClient(client: any): void;
 declare function getPersistentClient(): any;
-import { Client } from "@opensearch-project/opensearch";
+import { Client } from '@opensearch-project/opensearch';

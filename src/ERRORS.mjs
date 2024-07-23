@@ -15,6 +15,14 @@ export const INDEX_EXISTS_ERROR = {
   errorCode: 'Opensearch::INDEX_EXISTS'
 }
 
+export const UPDATE_SCHEMA_ERROR = {
+  errorCode: 'Opensearch::UPDATE_SCHEMA'
+}
+
+export const UPDATE_SETTINGS_ERROR = {
+  errorCode: 'Opensearch::UPDATE_SETTINGS'
+}
+
 export const INDEX_DOES_NOT_EXIST_ERROR = {
   message: 'Index does not exist',
   errorCode: 'Opensearch::INDEX_DOES_NOT_EXIST'
